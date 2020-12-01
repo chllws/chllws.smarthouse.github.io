@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Умный дом</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+            integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: url(https://www.teahub.io/photos/full/211-2115183_hd-background-one-color.jpg);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<style>.divanim {
+    margin: 0px;
+}
+
+.divanim svg {
+    width: 170px;
+    height: auto;
+    margin: 0 2rem;
+
+    overflow: visible;
+}
+
+.divanim svg polygon,
+.divanim svg path {
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+    fill: #FFFFFF;
+}
+
+.divanim svg:hover polygon,
+.divanim svg:hover path {
+    transition: all 1s cubic-bezier(0.2, 1, 0.3, 1);
+    fill: #000;
+}
+
+.divanim svg:hover .divanim-1-fixed {
+    animation: divanim-1-fixed-anim 1s cubic-bezier(0.2, 1, 0.3, 1) infinite;
+
+}
+
+@keyframes divanim-1-fixed-anim {
+    5% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1;
+    }
+</style>
+<style>
+    .range-wrap {
+        position: relative;
+        width: 100%;
+        padding: 1.5em 0; /*  Giving more room for hover  */
+        max-width: 400px;
+    }
+
+    /* Custom Bar */
+    .range-wrap::before {
+        content: "";
+        background: linear-gradient(to right, #b82286, #9b33e5, #7400a9);
+        width: 100%;
+        height: 8px;
+        display: block;
+        position: absolute;
+        border-radius: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: height 100ms ease;
+    }
+
+    .range-wrap:hover::before {
+        height: 10px;
+    }
+
+    /*  Hide Original */
+    .range {
+        width: 100%;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    .bubble {
+        background: #ff45f3;
+        border: 3px solid #cbd2da;
+        position: absolute;
+        border-radius: 50%;
+        width: 2rem;
+        height: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none; /* Remove pointer events on Bubble so user can click on the actual thumb beaneath it!  */
+        color: transparent;
+        display: grid;
+        place-items: center; /*  Place the number on the center  */
+        font-weight: bold;
+        transition: color 100ms ease, transform 100ms ease;
+        user-select: none; /*  Prevent Accidentally highlighting the number while sliding the cursor  */
+    }
+
+    .range-wrap:hover .bubble,
+    .range-wrap:focus .bubble {
+        color: black;
+        transform: translateY(-50%) scale(1.5);
+        padding: 0.1em;
+    }
+
+    /*body {
+        font-family: monospace;
+        height: 100%;
+        display: grid;
+        grid-gap: 5rem;
+        place-items: center;
+        padding: 10%;
+    }*/
+
+</style>
+<div class="pos-f-t">
+    <div class="collapse" id="navbarToggleExternalContent">
+        <div class="bg-dark p-4">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Главная страница
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> Устройства
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> План здания
+                </label>
+                <label class="btn btn-secondary active">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-wifi" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.385 6.115a.485.485 0 0 0-.048-.736A12.443 12.443 0 0 0 8 3 12.44 12.44 0 0 0 .663 5.379a.485.485 0 0 0-.048.736.518.518 0 0 0 .668.05A11.448 11.448 0 0 1 8 4c2.507 0 4.827.802 6.717 2.164.204.148.489.13.668-.049z"/>
+                        <path d="M13.229 8.271c.216-.216.194-.578-.063-.745A9.456 9.456 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.577 1.336c.205.132.48.108.652-.065zm-2.183 2.183c.226-.226.185-.605-.1-.75A6.472 6.472 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.408.19.611.09A5.478 5.478 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.611-.091l.015-.015zM9.06 12.44c.196-.196.198-.52-.04-.66A1.99 1.99 0 0 0 8 11.5a1.99 1.99 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .708 0l.707-.707z"/>
+                    </svg>
+                    <input type="radio" name="options" id="option4" autocomplete="off"> Сеть
+                </label>
+                <label class="btn btn-secondary">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-power" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M5.578 4.437a5 5 0 1 0 4.922.044l.5-.866a6 6 0 1 1-5.908-.053l.486.875z"/>
+                        <path fill-rule="evenodd" d="M7.5 8V1h1v7h-1z"/>
+                    </svg>
+                    <input type="radio" name="options" id="option5" autocomplete="off"> Питание
+                </label>
+
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
+                aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3">
+                <h1 class="text-center"> Основные</h1>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-clockwise"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Циркуляция</h3>
+
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="200" height="200" viewBox="0 0 16 16" class="bi bi-brightness-high-fill"
+                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
+                                <path fill-rule="evenodd"
+                                      d="M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Свет</h3>
+
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M7.646 1.146a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 .146.354v7a.5.5 0 0 1-.5.5H9.5a.5.5 0 0 1-.5-.5v-4H7v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .146-.354l6-6zM2.5 7.707V14H6v-4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4h3.5V7.707L8 2.207l-5.5 5.5z"/>
+                                <path fill-rule="evenodd" d="M13 2.5V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Сигнализация</h3>
+
+
+            </div>
+            <div class="col-sm-3">
+                <h1 class="text-center">Дополнительные</h1>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-droplet-half"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
+                                <path fill-rule="evenodd"
+                                      d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Влажность</h3>
+
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="200" height="200" viewBox="0 0 16 16" class="bi bi-bell-fill"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Звонок</h3>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="200" height="200" viewBox="0 0 16 16" class="bi bi-alarm-fill" fill="black"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M6 .5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1H9v1.07a7.001 7.001 0 0 1 3.274 12.474l.601.602a.5.5 0 0 1-.707.708l-.746-.746A6.97 6.97 0 0 1 8 16a6.97 6.97 0 0 1-3.422-.892l-.746.746a.5.5 0 0 1-.707-.708l.602-.602A7.001 7.001 0 0 1 7 2.07V1h-.5A.5.5 0 0 1 6 .5zM.86 5.387A2.5 2.5 0 1 1 4.387 1.86 8.035 8.035 0 0 0 .86 5.387zM11.613 1.86a2.5 2.5 0 1 1 3.527 3.527 8.035 8.035 0 0 0-3.527-3.527zM8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Будильник</h3>
+            </div>
+            <div class="col-sm-3">
+                <h1 class="text-center">Органайзер</h1>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-calendar-week"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Календарь</h3>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="200" height="200" viewBox="0 0 16 16" class="bi bi-cloud-fill"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center"> Погода</h3>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bar-chart"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Статистика</h3>
+
+            </div>
+            <div class="col-sm-3">
+                <h1 class="text-center">Информационные</h1>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Настройки</h3>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+                                <circle cx="8" cy="4.5" r="1"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Информация</h3>
+                <a href="#">
+                    <div class="divanim">
+                        <div class="text-center">
+                            <svg width="200" height="200" viewBox="0 0 16 16" class="bi bi-envelope-fill"
+                                 fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                <h3 class="text-center">Уведомления</h3>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <p>
+            <h3>Температура помещения, °C:</h3>
+            </p>
+            <p>
+            <div class="range-wrap">
+                <input type="range" class="range" min="0" max="100" value="0">
+                <output class="bubble"></output>
+            </div>
+            </p>
+            <p>
+            <h3>Уровень света:</h3></p>
+            <p>
+            <div class="range-wrap">
+                <input type="range" class="range" class="range" min="0" max="100" value="0">
+                <output class="bubble"></output>
+            </div>
+            </p>
+            <p>
+            <h3>Громкость звука:</h3>
+            </p>
+            <p>
+            <div class="range-wrap">
+                <input type="range" class="range" class="range" min="0" max="100" value="0">
+                <output class="bubble"></output>
+            </div>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const allRanges = document.querySelectorAll(".range-wrap");
+        allRanges.forEach((wrap) => {
+            const range = wrap.querySelector(".range");
+            const bubble = wrap.querySelector(".bubble");
+
+            range.addEventListener("input", () => {
+                setBubble(range, bubble);
+            });
+
+            // setting bubble on DOM load
+            setBubble(range, bubble);
+        });
+
+        function setBubble(range, bubble) {
+            const val = range.value;
+
+            const min = range.min || 0;
+            const max = range.max || 100;
+
+            const offset = Number(((val - min) * 100) / (max - min));
+
+            bubble.textContent = val;
+
+            // yes, 14px is a magic number
+            bubble.style.left = `calc(${offset}% - 14px)`;
+        }
+
+    </script>
+
+</body>
+</html>
